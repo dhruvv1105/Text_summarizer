@@ -1,4 +1,9 @@
 #Step 1. Importing Libraries
+# -----------------------------------------
+# Project: Text Summarizer using Python
+# Name: Dhruv Sharma
+# Description: This project summarizes text using TF-IDF technique
+# -----------------------------------------
 
 import sys
 import math
@@ -252,13 +257,17 @@ def average_score(sentence_score):
 #INPUT -> sentences(list of all sentences in article), sentence_score, threshold
 # (set to the average pf sentence_score)
 #OUTPUT -> summary (String text)
-def create_summary(sentences, sentence_score, threshold):
-    summary = ''
+import heapq
 
-    for sentence in sentences:
-        if sentence[:15] in sentence_score and sentence_score[sentence[:15]] >= (threshold):
-            summary += " " + sentence.text
-        
+def create_summary(sentences, sentence_score, n=2):
+    # Get top sentence keys
+    top_sent_keys = heapq.nlargest(n, sentence_score, key=sentence_score.get)
+    
+    summary = ""
+    for sent in sentences:
+        key = sent[:15]
+        if key in top_sent_keys:
+            summary += " " + sent.text
 
     return summary
 
@@ -302,7 +311,7 @@ sentence_scores = score_sentences(tf_idf_matrix)
 threshold = average_score(sentence_scores)
 
 #Getting summary 
-summary = create_summary(sentences, sentence_scores, 1.3 * threshold)
+summary = create_summary(sentences, sentence_scores, n=2)
 print("\n\n")
 print("*"*20,"Summary","*"*20)
 print("\n")
