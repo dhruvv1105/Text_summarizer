@@ -65,9 +65,12 @@ def pdfReader(pdf_path):
     
 #Function to Read wikipedia page url and return its Text   
 def wiki_text(url):
-    scrap_data = urllib.request.urlopen(url)
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    req = urllib.request.Request(url, headers=headers)
+    scrap_data = urllib.request.urlopen(req)
+    
     article = scrap_data.read()
-    parsed_article = bs.BeautifulSoup(article,'lxml')
+    parsed_article = bs.BeautifulSoup(article, 'html.parser')
     
     paragraphs = parsed_article.find_all('p')
     article_text = ""
@@ -75,7 +78,6 @@ def wiki_text(url):
     for p in paragraphs:
         article_text += p.text
     
-    #Removing all unwanted characters
     article_text = re.sub(r'\[[0-9]*\]', '', article_text)
     return article_text
 
